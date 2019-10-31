@@ -115,7 +115,8 @@ class DbfBase(object):
         out = "This total process would require more than {:.4g} MB of RAM."
         print(out.format(memory))      
 
-    def to_csv(self, csvname, chunksize=None, na='', header=True):
+    def to_csv(self, csvname, chunksize=None, na='', header=True,
+               append=True):
         '''Write DBF file contents to a CSV file.
 
         Parameters
@@ -123,8 +124,8 @@ class DbfBase(object):
         csvname : string
             The name of the CSV file that will be created. By default, the
             file will be opened in 'append' mode. This won't delete an already
-            existing file, but it will add new data to the end. May not be
-            what you want.
+            existing file, but it will add new data to the end. You can
+            change this behaviour by changing 
 
         chunksize : int, optional
             If this is set, the contents of the file buffer will be flushed
@@ -141,12 +142,18 @@ class DbfBase(object):
             however, float/int columns are always float('nan').
 
         header : boolean, optional
-            Write out a header line with the column names. Default is True. 
+            Write out a header line with the column names. Default is True.
+
+        append : boolean, optional
+            Open file for export in 'append' mode. Default is True. If set to
+            False, file for export will be open in 'write' mode (an existing
+            file with the same name will be erased).
         '''
         self._na_set(na)
         # set index column; this is only True when used with to_textsql()
         self._idx = False
-        csv = codecs.open(csvname, 'a', encoding=self._enc)
+        file_mode = 'a' if append else 'w'
+        csv = codecs.open(csvname, file_mode, encoding=self._enc)
         if header:
             column_line = ','.join(self.columns)
             csv.write(column_line + '\n')
