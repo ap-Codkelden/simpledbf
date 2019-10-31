@@ -125,7 +125,8 @@ class DbfBase(object):
             The name of the CSV file that will be created. By default, the
             file will be opened in 'append' mode. This won't delete an already
             existing file, but it will add new data to the end. You can
-            change this behaviour by changing 
+            change this behaviour by changing value of the ``append``
+            parameter.
 
         chunksize : int, optional
             If this is set, the contents of the file buffer will be flushed
